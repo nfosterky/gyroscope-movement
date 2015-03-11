@@ -1,5 +1,6 @@
 var camera, scene, renderer, deviceControls, ground, clock;
 
+var cylinder;
 var move = {
   right: false,
   left: false,
@@ -28,7 +29,7 @@ function initScene () {
 
   // CylinderGeometry(radiusTop, radiusBottom, height, radiusSegments,
   //     heightSegments, openEnded)
-  var geometry = new THREE.CylinderGeometry( 500, 500, 237, 32, 1, true ),
+  var geometry = new THREE.CylinderGeometry( 300, 600, 2000, 32, 1, true ),
     texture	= THREE.ImageUtils.loadTexture( "img/360-degree-1st-day-xxs.jpg" );
 
   var material = new THREE.MeshLambertMaterial({
@@ -37,13 +38,14 @@ function initScene () {
     side: THREE.BackSide
   });
 
-  var cylinder = new THREE.Mesh( geometry, material );
+  cylinder = new THREE.Mesh( geometry, material );
+  cylinder.rotation.x = -Math.PI / 2;
 
   scene.add( cylinder );
 
    // add camera
    camera = new THREE.PerspectiveCamera( 45, window.innerWidth /
-       window.innerHeight, 1, 1000 );
+       window.innerHeight, 1, 1200 );
 
    camera.position.set( 0, 50, 0 );
 
@@ -55,22 +57,22 @@ function initScene () {
    light.position.set( 50, 1200, -500 );
    scene.add( light );
 
-   groundTexture = THREE.ImageUtils.loadTexture(
-       "img/moon.png" );
-
-   groundTexture.anisotropy = 16;
-
-   var groundMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff,
-       specular: 0x111111, map: groundTexture } );
-
-   ground = new THREE.Mesh( new THREE.PlaneBufferGeometry( 10000, 10000 ),
-       groundMaterial );
-
-   ground.position.y = -70;
-   ground.rotation.x = -Math.PI / 2;
-  //  camera.rotation.x = -Math.PI / 2;
-   ground.receiveShadow = true;
-   scene.add( ground );
+  //  groundTexture = THREE.ImageUtils.loadTexture(
+  //      "img/moon.png" );
+  //
+  //  groundTexture.anisotropy = 16;
+  //
+  //  var groundMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff,
+  //      specular: 0x111111, map: groundTexture } );
+  //
+  //  ground = new THREE.Mesh( new THREE.PlaneBufferGeometry( 10000, 10000 ),
+  //      groundMaterial );
+  //
+  //  ground.position.y = -70;
+  //  ground.rotation.x = -Math.PI / 2;
+  // //  camera.rotation.x = -Math.PI / 2;
+  //  ground.receiveShadow = true;
+  //  scene.add( ground );
 
 
 
@@ -99,29 +101,28 @@ function animate() {
 
 function movementUpdate () {
   var delta = clock.getDelta(); // seconds.
-	var moveDistance = 200 * delta; // 200 pixels / second
-	var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) / second
+	var moveDistance = 100 * delta; // 200 pixels / second
 
   if (move.forward) {
-    
+
     camera.translateZ( -moveDistance );
     // camera.translateY( -moveDistance );
   }
 
   if (move.back) {
-    // camera.translateZ( moveDistance );
-    camera.translateY( moveDistance );
+    camera.translateZ( -moveDistance );
+    // camera.translateY( -moveDistance );
     // camera.translateY( moveDistance / 2 );
   }
 
   if (move.left) {
-    camera.position.x -= moveDistance;
-    // camera.translateX( -moveDistance );
+
+    camera.translateX( -moveDistance );
   }
 
   if (move.right) {
-    camera.position.x += moveDistance;
-    // camera.translateX( moveDistance );
+    // cylinder.position.x += moveDistance;
+    camera.translateX( moveDistance );
   }
 
   if (move.up) {
